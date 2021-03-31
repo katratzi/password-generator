@@ -12,10 +12,16 @@ var slider = document.getElementById("passwordLength");
 var sliderText = document.getElementById("passwordLengthValue");
 sliderText.innerHTML = slider.value; // Display the default slider value
 
+// regen at start
+regenerate();
+
 // Update the current slider value (each time you drag the slider handle)
+// and also regenerate
 slider.oninput = function () {
     sliderText.innerHTML = this.value;
+    regenerate();
 }
+
 
 // get a new random password
 function regenerate() {
