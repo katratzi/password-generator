@@ -12,8 +12,9 @@
 <body>
 
     <h1>Password Generator</h1>
-    <p>1234-5678-qwer</p>
-    <button>Generate</button>
+    <p id="password">1234-5678-4321</p>
+    <input type="range" min="1" max="36" value="8" class="slider" id="passwordLength">
+    <button onclick="regenerate()">Generate</button>
 
     <script src="./generate.js">    </script>
 </body>
