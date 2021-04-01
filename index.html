@@ -11,20 +11,27 @@
 
 <body>
 
-    <h1>Password Generator</h1>
+    <div class="center">
+        <div class="container">
+            <h1>Password Generator</h1>
 
-    <div>
-        <input type="radio" name="gen" value="constant" onclick="changeGen(this);" checked /> constant
-        <input type="radio" name="gen" value="snake" onclick="changeGen(this);" /> snake-case
+            <div class="radio">
+                <input type="radio" name="gen" value="constant" onclick="changeGen(this);" checked /> constant
+                <input type="radio" name="gen" value="snake" onclick="changeGen(this);" /> snake-case
+            </div>
+
+
+            <p id="password">1234-5678-4321</p>
+
+            <div class="slidecontainer">
+                <input type="range" min="1" max="36" value="8" class="slider" id="passwordLength">
+            </div>
+            <div id="passwordLengthValue">1</div>
+            <p>
+                <button onclick="regenerate()">Generate</button>
+            </p>
+        </div>
     </div>
-
-
-    <p id="password">1234-5678-4321</p>
-
-    <input type="range" min="1" max="36" value="8" class="slider" id="passwordLength">
-    <div id="passwordLengthValue">1</div>
-
-    <button onclick="regenerate()">Generate</button>
 
     <script src="./generate.js">    </script>
 </body>

@@ -1,5 +1,80 @@
+* {
+    box-sizing: border-box;
+  }
+
+
 body {
     font: 1rem;
     font-family: ui-monospace, monospace;
-    background-color:#eee;
+    /* background-color:#222831; */
+    background-color: #30475e;
+    color: #ececec;
+    margin: 1rem;
+}
+
+/* this is kind of fun */
+/* body {
+	background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+} */
+
+.container {
+    width: 50%;
+    padding: 0rem 2rem 2rem 2rem;
+    margin: 2rem auto;
+    border: 1px solid #f2a365;
+
+    /* background-color: #30475e; */
+    background-color: #222831;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.center {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.slidecontainer {
+    width: 85%;
+    margin: 0rem auto;
+}
+.slider {
+  width: 100%;
+}
+
+
+input[type="radio"]
+{
+  vertical-align: middle;
+  margin-top: -1px;
+}
+
+/* For mobile phones: */
+.container {
+    width: 100%;
+  }
+  
+@media only screen and (min-width: 600px) {
+    /* For desktop: */
+    .container {
+        width: 50%;
+        max-width: 800px;
+        min-width: 500px;
+  }
 }
