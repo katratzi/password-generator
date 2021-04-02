@@ -29,15 +29,19 @@ slider.oninput = function () {
 }
 
 
-// radio button for gen type clicked
+// radio button for generator type clicked
 function changeGen(radio) {
 
     // check if we have a change in generator type (can click same radio twice)
     if (currentGen !== radio.value) {
+
+        // keep the slider from jumping about when using snake
+        const normalValue = slider.value / slider.max;
         currentGen = radio.value;
 
         // change slider min/max based on gen type
-        slider.max = currentGen === "snake" ? 6 : 42;
+        slider.max = currentGen === "snake" ? 5 : 32;
+        slider.value = normalValue * slider.max;
         sliderText.innerHTML = slider.value;
 
         // regen if we change type
