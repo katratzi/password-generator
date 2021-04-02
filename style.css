@@ -1,18 +1,31 @@
-* {
-    box-sizing: border-box;
-  }
+/* Add in some nice fonts - Unica One and Source Code Pro from google */
 
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&family=Unica+One&display=swap');
+* {
+  box-sizing: border-box;
+}
+
+/* my custom colors */
+
+:root {
+  /* from color hunt */
+  --colD: #112d4e;
+  --colC: #3f72af;
+  --colB: #dbe2ef;
+  --colA: #f9f7f7;
+}
 
 body {
-    font: 1rem;
-    font-family: ui-monospace, monospace;
-    /* background-color:#222831; */
-    background-color: #30475e;
-    color: #ececec;
-    margin: 1rem;
+  font: 1rem;
+  font-family: 'Source Code Pro', ui-monospace, monospace;
+  /* background-color:#222831; */
+  background-color: var(--colD);
+  color: var(--colA);
+  margin: 1rem;
 }
 
 /* this is kind of fun */
+
 /* body {
 	background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
 	background-size: 400% 400%;
@@ -31,16 +44,26 @@ body {
 	}
 } */
 
-.container {
-    width: 50%;
-    padding: 0rem 2rem 2rem 2rem;
-    margin: 2rem auto;
-    border: 1px solid #f2a365;
+h1, h2, h3, h4, h5 {
+  font-family: 'Unica One', sans-serif;
+  letter-spacing: 0.5rem;
+}
 
-    /* background-color: #30475e; */
-    background-color: #222831;
-    border-radius: 8px;
-    text-align: center;
+h1 {
+  font-size: 3rem;
+  text-transform: uppercase;
+}
+
+.container {
+  width: 50%;
+  padding: 0rem 2rem 2rem 2rem;
+  margin: 2rem auto;
+  border: 1px solid var(--colC);
+  /* background-color: #30475e; */
+  background-color: var(--colB);
+  text-align: center;
+  color: var(--colD);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 }
 
 .center {
@@ -51,30 +74,43 @@ body {
 }
 
 .slidecontainer {
-    width: 85%;
-    margin: 0rem auto;
+  width: 85%;
+  margin: 0rem auto;
 }
+
 .slider {
   width: 100%;
 }
 
+#password {
+  font-size: 1.2rem;
+  background-color: var(--colA);
+  border: 1px solid var(--colC);
+  padding: 0.5rem;
+}
 
-input[type="radio"]
-{
+/* radio input */
+
+input[type="radio"] {
+  /* make text and buttons align nicer */
   vertical-align: middle;
   margin-top: -1px;
+  /* bit bigger */
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 /* For mobile phones: */
+
 .container {
-    width: 100%;
-  }
-  
+  width: 100%;
+}
+
 @media only screen and (min-width: 600px) {
-    /* For desktop: */
-    .container {
-        width: 50%;
-        max-width: 800px;
-        min-width: 500px;
+  /* For desktop: */
+  .container {
+    width: 50%;
+    max-width: 800px;
+    min-width: 500px;
   }
 }
