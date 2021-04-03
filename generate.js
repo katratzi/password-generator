@@ -13,7 +13,7 @@ const say = ["ch", "cl", "dd", "dr", "dy", "fh", "fr", "fy", "gh", "gy", "ky", "
 // we have different types of passwords.  a constant random string. a-snake-case-type. easy to say
 let currentGen = "constant";
 // options for characters
-let useUppercase = false;
+let useUppercase = true;
 let useLowercase = true;
 let useSymbols = false;
 let useNumbers = false;
@@ -52,7 +52,6 @@ function changeGen(radio) {
         slider.max = currentGen === "snake" ? 5 : 32;
         slider.value = normalValue * slider.max;
         sliderText.innerHTML = slider.value;
-
         // regen if we change type
         regenerate();
     }
@@ -96,22 +95,13 @@ function regenerate() {
     easterEgg();
 }
 
+
 // regen a constant string, no dashes
 function rengerateConstant() {
     let random = "";
 
-    // what special chanacters might we use
-    let tempSpecial = [];
-    if (useSymbols) { tempSpecial = [...symbols]; }
-    if (useNumbers) { tempSpecial = [...tempSpecial, ...numbers]; }
-
     for (let i = 0; i < slider.value; i++) {
-        if (useSpecialOnly())
-            random += randomChar(tempSpecial);
-        else if (useSpecial()) // 1 in 6 chance of special char
-            random += rollDice(6) === 0 ? randomChar(tempSpecial) : randomChar(letters);
-        else
-            random += randomChar(letters);
+        random += randomUserChar();
     }
 
     // modify final string upper/lower
@@ -126,8 +116,8 @@ function rengerateSnake() {
     let random = "";
     for (let i = 0; i < slider.value; i++) {
         for (let j = 0; j < 5; j++) {
-            // no symbols in snake case
-            random += randomChar(letters);
+            // ok, we'll allow symbols
+            random += randomUserChar();
         }
         // hyphen seperators except at end
         if (i !== (slider.value - 1)) {
@@ -135,8 +125,10 @@ function rengerateSnake() {
         }
     }
 
-    random = useUppercase ? randomUppercase(random) : random;
-    random = random.toUpperCase();
+    // modify final string upper/lower
+    if (!useLowercase && useUppercase) { random = random.toUpperCase(); }
+    if (useLowercase && useUppercase) { random = randomUppercase(random); }
+
     return random;
 }
 
@@ -157,8 +149,29 @@ function rengerateSay() {
     }
     // small chance that we can be too long from adding 2 chars at end
     random = random.substring(0, slider.value);
-    random = useUppercase ? randomUppercase(random) : random;
+    // modify final string upper/lower
+    if (!useLowercase && useUppercase) { random = random.toUpperCase(); }
+    if (useLowercase && useUppercase) { random = randomUppercase(random); }
+
     return random;
+}
+
+// random char from the options set by the user
+function randomUserChar() {
+    let r = "";
+    // what special chanacters might we use
+    let tempSpecial = [];
+    if (useSymbols) { tempSpecial = [...symbols]; }
+    if (useNumbers) { tempSpecial = [...tempSpecial, ...numbers]; }
+
+    if (useSpecialOnly())
+        r = randomChar(tempSpecial);
+    else if (useSpecial()) // 1 in 6 chance of special char
+        r = rollDice(6) === 0 ? randomChar(tempSpecial) : randomChar(letters);
+    else
+        r = randomChar(letters);
+
+    return r;
 }
 
 // random one of the given characters
