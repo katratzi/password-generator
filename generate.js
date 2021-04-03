@@ -10,8 +10,17 @@ const nonVowels = letters.filter((letter) => !vowels.includes(letter));
 const say = ["ch", "cl", "dd", "dr", "dy", "fh", "fr", "fy", "gh", "gy", "ky", "ll", "ly", "nt", "nd", "ng", "ny", "ph", "py", "rh", "rn", "rl", "rk", "sh", "st", "sy", "th", "ty", "ph", "vy", "xp", "yl", "yn", "yr", "zz", "zy"]
 
 
-// we have different types of passwords.  a constant random string. a-snake-case-type
+// we have different types of passwords.  a constant random string. a-snake-case-type. easy to say
 let currentGen = "constant";
+// options for characters
+let useUppercase = false;
+let useLowercase = true;
+let useSymbols = false;
+let useNumbers = false;
+
+useSpecial = () => useSymbols || useNumbers;
+useSpecialOnly = () => ((useSymbols || useNumbers) && (!useLowercase && !useUppercase));
+
 
 // slider and it's value
 var slider = document.getElementById("passwordLength");
@@ -49,6 +58,25 @@ function changeGen(radio) {
     }
 }
 
+function changeOpt(option) {
+
+    // what are we toggling
+    if (option.value === "lowercase") {
+        useLowercase = option.checked;
+    }
+    else if (option.value === "uppercase") {
+        useUppercase = option.checked;
+    }
+    else if (option.value === "symbols") {
+        useSymbols = option.checked;
+    }
+    else if (option.value === "numbers") {
+        useNumbers = option.checked;
+    }
+
+    regenerate();
+}
+
 // get a new random password
 function regenerate() {
 
@@ -65,16 +93,31 @@ function regenerate() {
 
     // change in the password text 
     document.getElementById('password').innerText = password;
+    easterEgg();
 }
 
 // regen a constant string, no dashes
 function rengerateConstant() {
     let random = "";
+
+    // what special chanacters might we use
+    let tempSpecial = [];
+    if (useSymbols) { tempSpecial = [...symbols]; }
+    if (useNumbers) { tempSpecial = [...tempSpecial, ...numbers]; }
+
     for (let i = 0; i < slider.value; i++) {
-        // 1 in 6 chance of having a symbol
-        random += rollDice(6) === 0 ? randomChar(symbols) : randomChar(letters);
+        if (useSpecialOnly())
+            random += randomChar(tempSpecial);
+        else if (useSpecial()) // 1 in 6 chance of special char
+            random += rollDice(6) === 0 ? randomChar(tempSpecial) : randomChar(letters);
+        else
+            random += randomChar(letters);
     }
-    random = randomUppercase(random);
+
+    // modify final string upper/lower
+    if (!useLowercase && useUppercase) { random = random.toUpperCase(); }
+    if (useLowercase && useUppercase) { random = randomUppercase(random); }
+
     return random;
 }
 
@@ -91,7 +134,9 @@ function rengerateSnake() {
             random += '-';
         }
     }
-    random = randomUppercase(random);
+
+    random = useUppercase ? randomUppercase(random) : random;
+    random = random.toUpperCase();
     return random;
 }
 
@@ -110,10 +155,11 @@ function rengerateSay() {
         }
         useVowel = !useVowel;
     }
-    random = randomUppercase(random);
+    // small chance that we can be too long from adding 2 chars at end
+    random = random.substring(0, slider.value);
+    random = useUppercase ? randomUppercase(random) : random;
     return random;
 }
-
 
 // random one of the given characters
 function randomChar(chars) {
@@ -138,4 +184,11 @@ function randomUppercase(chars) {
         altered += char;
     }
     return altered;
+}
+
+function easterEgg() {
+    if (!useLowercase && !useUppercase && !useSymbols && !useNumbers) {
+        document.getElementById('password').innerText = "¯\\_(ツ)_/¯";
+    }
+
 }
