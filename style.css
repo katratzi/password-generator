@@ -3,6 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&family=Unica+One&display=swap');
 * {
   box-sizing: border-box;
+  /* border: 1px solid red; */
 }
 
 /* my custom colors */
@@ -54,16 +55,24 @@ h1 {
   text-transform: uppercase;
 }
 
+label {
+  margin: 0.25rem 1rem;
+  display: inline-block;
+}
+
 .container {
   width: 50%;
   padding: 0rem 2rem 2rem 2rem;
   margin: 2rem auto;
   border: 1px solid var(--colC);
-  /* background-color: #30475e; */
   background-color: var(--colB);
   text-align: center;
   color: var(--colD);
   box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+
+.radio {
+  margin: 1rem 0rem 1rem 0rem;
 }
 
 .center {
