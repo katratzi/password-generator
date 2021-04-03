@@ -52,6 +52,7 @@ function changeGen(radio) {
         slider.max = currentGen === "snake" ? 5 : 32;
         slider.value = normalValue * slider.max;
         sliderText.innerHTML = slider.value;
+        updateCheckDisabled();
         // regen if we change type
         regenerate();
     }
@@ -95,6 +96,13 @@ function regenerate() {
     easterEgg();
 }
 
+// we ignore symbols and number on easy to say, so disable these to illustrate that
+function updateCheckDisabled() {
+    var numCheck = document.querySelector("input[type='checkbox'][value='numbers']");
+    var symCheck = document.querySelector("input[type='checkbox'][value='symbols']");
+    numCheck.disabled = currentGen === "say";
+    symCheck.disabled = currentGen === "say";
+}
 
 // regen a constant string, no dashes
 function rengerateConstant() {
