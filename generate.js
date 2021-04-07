@@ -25,7 +25,7 @@ useSpecialOnly = () => ((useSymbols || useNumbers) && (!useLowercase && !useUppe
 // slider and it's value
 var slider = document.getElementById("passwordLength");
 var sliderText = document.getElementById("passwordLengthValue");
-sliderText.innerHTML = slider.value; // Display the default slider value
+updateSliderText();
 
 // regen at start
 regenerate();
@@ -33,10 +33,8 @@ regenerate();
 // Update the current slider value (each time you drag the slider handle)
 // and also regenerate
 slider.oninput = function () {
-    sliderText.innerHTML = this.value;
     regenerate();
 }
-
 
 // radio button for generator type clicked
 function changeGen(radio) {
@@ -51,7 +49,7 @@ function changeGen(radio) {
         // change slider min/max based on gen type
         slider.max = currentGen === "snake" ? 5 : 32;
         slider.value = normalValue * slider.max;
-        sliderText.innerHTML = slider.value;
+        updateSliderText();
         updateCheckDisabled();
         // regen if we change type
         regenerate();
@@ -93,6 +91,7 @@ function regenerate() {
 
     // change in the password text 
     document.getElementById('password').innerText = password;
+    updateSliderText();
     easterEgg();
 }
 
@@ -207,9 +206,32 @@ function randomUppercase(chars) {
     return altered;
 }
 
+// show slider value with emoji for password length
+function updateSliderText() {
+    const passwordLength = document.getElementById('password').innerText.length;
+    let emoji = '';
+    if (passwordLength < 8) {
+        emoji = '😖 bad'
+    }
+    else if (passwordLength < 12) {
+        emoji = '😐 meh'
+    }
+    else if (passwordLength < 20) {
+        emoji = '😌 yes'
+    }
+    else {
+        emoji = '😎 rad'
+    }
+
+    // Display the default slider value
+    sliderText.innerHTML = slider.value + " " + emoji;
+
+}
+
 function easterEgg() {
     if (!useLowercase && !useUppercase && !useSymbols && !useNumbers) {
         document.getElementById('password').innerText = "¯\\_(ツ)_/¯";
+        sliderText.innerHTML = slider.value + ' 😵';
     }
 
 }
