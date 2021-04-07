@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+        integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">s
     <link rel="stylesheet" href="./style.css">
     <title>Password Generator</title>
 </head>
@@ -34,14 +36,15 @@
             </div>
 
 
-            <p id="password">1234-5678-4321</p>
+            <p id="password">1234-5678-4321 </p>
 
             <div class="slidecontainer">
                 <input type="range" min="1" max="36" value="14" class="slider" id="passwordLength">
             </div>
             <div id="passwordLengthValue">1</div>
             <p>
-                <button onclick="regenerate()">Generate</button>
+                <button onclick="regenerate()"><i class="fas fa-clipboard"></i> Generate</button>
+                <button onclick="copyToClipboard()"><i class="fas fa-clipboard"></i> Copy</button>
             </p>
         </div>
     </div>

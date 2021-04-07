@@ -228,6 +228,26 @@ function updateSliderText() {
 
 }
 
+function copyToClipboard() {
+    // get text to be copied
+    var text = document.getElementById('password').innerText;
+    console.log(text);
+
+    // need an input text to work with
+    var tempInput = document.createElement("input");
+    tempInput.value = text;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    tempInput.setSelectionRange(0, 99999); /* For mobile devices */
+
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+
+    /* Alert the copied text */
+    alert("Copied to clipboard: " + text);
+
+}
+
 function easterEgg() {
     if (!useLowercase && !useUppercase && !useSymbols && !useNumbers) {
         document.getElementById('password').innerText = "¯\\_(ツ)_/¯";

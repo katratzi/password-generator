@@ -67,6 +67,7 @@ button {
   padding: 0.5rem 1rem;
   border-radius: 1rem;
   letter-spacing: 0.1rem;
+  margin: 0.2rem 1rem;
 }
 
 button:hover, button:active {
