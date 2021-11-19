@@ -1,6 +1,6 @@
 /* Add in some nice fonts - Unica One and Source Code Pro from google */
 
-@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&family=Unica+One&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro&family=Unica+One&display=swap");
 * {
   box-sizing: border-box;
   /* border: 1px solid red; */
@@ -18,7 +18,7 @@
 
 body {
   font: 1rem;
-  font-family: 'Source Code Pro', ui-monospace, monospace;
+  font-family: "Source Code Pro", ui-monospace, monospace;
   /* background-color:#222831; */
   background-color: var(--colD);
   color: var(--colA);
@@ -45,13 +45,17 @@ body {
 	}
 } */
 
-h1, h2, h3, h4, h5 {
-  font-family: 'Unica One', sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: "Unica One", sans-serif;
   letter-spacing: 0.5rem;
 }
 
 h1 {
-  font-size: 3rem;
+  font-size: 2rem;
   text-transform: uppercase;
 }
 
@@ -70,7 +74,8 @@ button {
   margin: 0.2rem 1rem;
 }
 
-button:hover, button:active {
+button:hover,
+button:active {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   background-color: var(--colC);
   border: solid 1px var(--colB);
@@ -105,7 +110,8 @@ button:active {
   background-color: var(--colB);
   text-align: center;
   color: var(--colD);
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 }
 
 .radio {
@@ -158,5 +164,9 @@ input[type="radio"] {
     width: 50%;
     max-width: 800px;
     min-width: 500px;
+  }
+  h1 {
+    font-size: 3rem;
+    text-transform: uppercase;
   }
 }
