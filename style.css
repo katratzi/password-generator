@@ -9,19 +9,36 @@
 /* my custom colors */
 
 :root {
-  /* from color hunt */
-  --colD: #112d4e;
-  --colC: #3f72af;
-  --colB: #dbe2ef;
-  --colA: #f9f7f7;
+  --colPrimary: #1c1c1c;
+  --colInteractive: #4aa5ff;
+  --colBackground: #f7f7f7;
+  --colCard: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --colPrimary: #f7f7f7;
+    --colInteractive: #0081ff;
+    --colBackground: #333;
+    --colCard: #1c1c1c;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --colPrimary: #1c1c1c;
+    --colInteractive: #4aa5ff;
+    --colBackground: #f7f7f7;
+    --colCard: #fff;
+  }
 }
 
 body {
   font: 1rem;
   font-family: "Source Code Pro", ui-monospace, monospace;
   /* background-color:#222831; */
-  background-color: var(--colD);
-  color: var(--colA);
+  background-color: var(--colBackground);
+  color: var(--colPrimary);
   margin: 1rem;
 }
 
@@ -65,9 +82,9 @@ label {
 }
 
 button {
-  background-color: var(--colD);
-  color: var(--colA);
-  border: solid 1px var(--colC);
+  background-color: var(--colBackground);
+  color: var(--colInteractive);
+  border: none;
   padding: 0.5rem 1rem;
   border-radius: 1rem;
   letter-spacing: 0.1rem;
@@ -77,14 +94,8 @@ button {
 button:hover,
 button:active {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  background-color: var(--colC);
-  border: solid 1px var(--colB);
-  color: var(--colA);
-}
-
-button:active {
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 1px 1px;
-  background-color: var(--colD);
+  background-color: var(--colInteractive);
+  color: var(--colPrimary);
 }
 
 button:focus {
@@ -105,13 +116,13 @@ button:active {
 .container {
   width: 50%;
   padding: 0rem 2rem 2rem 2rem;
-  margin: 2rem auto;
-  border: 1px solid var(--colC);
-  background-color: var(--colB);
+  margin: 1rem auto;
+  background-color: var(--colCard);
   text-align: center;
-  color: var(--colD);
+  color: var(--colPrimary);
   box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
     rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  border-radius: 0.5rem;
 }
 
 .radio {
@@ -119,7 +130,6 @@ button:active {
 }
 
 .center {
-  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -136,9 +146,9 @@ button:active {
 
 #password {
   font-size: 1.2rem;
-  background-color: var(--colA);
-  border: 1px solid var(--colC);
+  background-color: var(--colInteractive);
   padding: 0.5rem;
+  border-radius: 0.5rem;
 }
 
 /* radio input */
@@ -168,5 +178,8 @@ input[type="radio"] {
   h1 {
     font-size: 3rem;
     text-transform: uppercase;
+  }
+  .center {
+    height: 100vh;
   }
 }
