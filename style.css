@@ -149,6 +149,10 @@ button:active {
   background-color: var(--colInteractive);
   padding: 0.5rem;
   border-radius: 0.5rem;
+
+  /* for small screens want to break into next line */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 /* radio input */
