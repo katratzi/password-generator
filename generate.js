@@ -11,7 +11,7 @@ const say = ["ch", "cl", "dd", "dr", "dy", "fh", "fr", "fy", "gh", "gy", "ky", "
 
 
 // we have different types of passwords.  a constant random string. a-snake-case-type. easy to say
-let currentGen = "constant";
+let currentGen = "snake";
 // options for characters
 let useUppercase = true;
 let useLowercase = true;

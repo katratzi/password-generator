@@ -18,9 +18,9 @@
             <h1>Password Generator</h1>
 
             <div class="radio">
-                <label><input type="radio" name="gen" value="constant" onclick="changeGen(this)" checked />
+                <label><input type="radio" name="gen" value="constant" onclick="changeGen(this)"  />
                     single</label>
-                <label><input type="radio" name="gen" value="snake" onclick="changeGen(this)" /> snake-case</label>
+                <label><input type="radio" name="gen" value="snake" onclick="changeGen(this)" checked/> snake-case</label>
                 <label><input type="radio" name="gen" value="say" onclick="changeGen(this)" /> easy to say</label>
             </div>
 
@@ -39,7 +39,7 @@
             <p id="password">1234-5678-4321 </p>
 
             <div class="slidecontainer">
-                <input type="range" min="1" max="36" value="14" class="slider" id="passwordLength">
+                <input type="range" min="1" max="5" value="3" class="slider" id="passwordLength">
             </div>
             <div id="passwordLengthValue">1</div>
             <p>
