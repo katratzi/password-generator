@@ -4,10 +4,10 @@ console.log("hello world");
 // now I know my abc's
 const letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-const symbols = ["!", "@", "$", "%", "^", "&", "*", "(", ")", "?", "#", ";", "?", "+"];
+const symbols = ["!", "@", "$", "%", "^", "&", "*", "(", ")", "?", "#", ";", "+"];
 const vowels = ["a", "e", "i", "o", "u"];
 const nonVowels = letters.filter((letter) => !vowels.includes(letter));
-const say = ["ch", "cl", "dd", "dr", "dy", "fh", "fr", "fy", "gh", "gy", "ky", "ll", "ly", "nt", "nd", "ng", "ny", "ph", "py", "rh", "rn", "rl", "rk", "sh", "st", "sy", "th", "ty", "ph", "vy", "xp", "yl", "yn", "yr", "zz", "zy"]
+const say = ["ch", "cl", "dd", "dr", "dy", "fh", "fr", "fy", "gh", "gy", "ky", "ll", "ly", "nt", "nd", "ng", "ny", "ph", "py", "rh", "rn", "rl", "rk", "sh", "st", "sy", "th", "ty", "ph", "vy", "xp", "yl", "yn", "yr", "zz", "zy"];
 
 
 // we have different types of passwords.  a constant random string. a-snake-case-type. easy to say
@@ -18,22 +18,29 @@ let useLowercase = true;
 let useSymbols = false;
 let useNumbers = false;
 
-useSpecial = () => useSymbols || useNumbers;
-useSpecialOnly = () => ((useSymbols || useNumbers) && (!useLowercase && !useUppercase));
+const useSpecial = () => useSymbols || useNumbers;
+const useSpecialOnly = () => ((useSymbols || useNumbers) && (!useLowercase && !useUppercase));
 
 
-// slider and it's value
-var slider = document.getElementById("passwordLength");
-var sliderText = document.getElementById("passwordLengthValue");
-updateSliderText();
+// slider and its value
+const slider = document.getElementById("passwordLength");
+const sliderText = document.getElementById("passwordLengthValue");
+const passwordElement = document.getElementById('password');
 
-// regen at start
-regenerate();
+// Initialize only if elements exist
+if (slider && sliderText && passwordElement) {
+    updateSliderText();
+    regenerate();
+} else {
+    console.error("Required DOM elements not found");
+}
 
 // Update the current slider value (each time you drag the slider handle)
 // and also regenerate
-slider.oninput = function () {
-    regenerate();
+if (slider) {
+    slider.oninput = function () {
+        regenerate();
+    }
 }
 
 // radio button for generator type clicked
@@ -90,7 +97,7 @@ function regenerate() {
     }
 
     // change in the password text 
-    document.getElementById('password').innerText = password;
+    passwordElement.innerText = password;
     updateSliderText();
     easterEgg();
 }
@@ -141,26 +148,104 @@ function rengerateSnake() {
 
 // regen a constant string, no dashes
 function rengerateSay() {
+    let random = ""
+    const targetLength = slider.value
 
-    // usually don't start with vowel
-    let useVowel = rollDice(3) === 0 ? true : false;
-    let random = "";
-    // flips between vowel and consonant...slightly higher chance of single consonant than double char
-    for (let i = 0; random.length < slider.value; i++) {
-        if (useVowel) {
-            random += randomChar(vowels);
+    // Common English syllable patterns
+    const syllablePatterns = [
+        // consonant + vowel
+        (c, v) => c + v,
+        // consonant + vowel + consonant
+        (c, v, c2) => c + v + c2,
+        // consonant cluster + vowel
+        (c, v) => c + v,
+        // consonant + vowel + consonant cluster
+        (c, v, c2) => c + v + c2
+    ]
+
+    // Common consonant clusters that are easy to pronounce
+    const consonantClusters = [
+        "bl", "br", "ch", "cl", "cr", "dr", "fl", "fr", "gl", "gr", "pl", "pr",
+        "sc", "sh", "sk", "sl", "sm", "sn", "sp", "st", "sw", "th", "tr", "tw", "wh", "wr"
+    ]
+
+    // Common ending consonant clusters
+    const endingClusters = [
+        "ck", "ct", "ft", "ld", "lf", "lk", "lm", "lp", "lt", "mp", "nd", "ng",
+        "nk", "nt", "pt", "rd", "rk", "rm", "rn", "rp", "rt", "sk", "sp", "st"
+    ]
+
+    // Generate syllables until we reach or exceed target length
+    while (random.length < targetLength) {
+        // Choose a random syllable pattern
+        const pattern = syllablePatterns[rollDice(syllablePatterns.length)]
+
+        // Get random consonant(s)
+        let consonant
+        if (rollDice(3) === 0) { // 1/3 chance of using a consonant cluster
+            consonant = consonantClusters[rollDice(consonantClusters.length)]
         } else {
-            random += rollDice(3) === 0 ? randomChar(say) : randomChar(nonVowels);
+            consonant = nonVowels[rollDice(nonVowels.length)]
         }
-        useVowel = !useVowel;
-    }
-    // small chance that we can be too long from adding 2 chars at end
-    random = random.substring(0, slider.value);
-    // modify final string upper/lower
-    if (!useLowercase && useUppercase) { random = random.toUpperCase(); }
-    if (useLowercase && useUppercase) { random = randomUppercase(random); }
 
-    return random;
+        // Get random vowel
+        const vowel = vowels[rollDice(vowels.length)]
+
+        // Get ending consonant if needed
+        let ending = ""
+        if (pattern.length === 3) { // If pattern needs an ending consonant
+            if (rollDice(3) === 0) { // 1/3 chance of using an ending cluster
+                ending = endingClusters[rollDice(endingClusters.length)]
+            } else {
+                ending = nonVowels[rollDice(nonVowels.length)]
+            }
+        }
+
+        // Apply the pattern
+        const syllable = pattern(consonant, vowel, ending)
+
+        // Check remaining length needed
+        const remainingLength = targetLength - random.length
+
+        // If this syllable would make us too long, try a shorter pattern
+        if (syllable.length > remainingLength) {
+            if (remainingLength === 1) {
+                random += vowels[rollDice(vowels.length)]
+                break
+            } else if (remainingLength === 2) {
+                random += nonVowels[rollDice(nonVowels.length)] + vowels[rollDice(vowels.length)]
+                break
+            } else if (remainingLength === 3) {
+                // Try a CVC pattern
+                random += nonVowels[rollDice(nonVowels.length)] +
+                    vowels[rollDice(vowels.length)] +
+                    nonVowels[rollDice(nonVowels.length)]
+                break
+            }
+            // If we can't fit this syllable, try again with a new pattern
+            continue
+        }
+
+        random += syllable
+    }
+
+    // Final length check and adjustment if needed
+    if (random.length !== targetLength) {
+        if (random.length > targetLength) {
+            random = random.substring(0, targetLength)
+        } else {
+            // If we're short, add vowels until we reach the target length
+            while (random.length < targetLength) {
+                random += vowels[rollDice(vowels.length)]
+            }
+        }
+    }
+
+    // modify final string upper/lower
+    if (!useLowercase && useUppercase) { random = random.toUpperCase() }
+    if (useLowercase && useUppercase) { random = randomUppercase(random) }
+
+    return random
 }
 
 // random char from the options set by the user
@@ -183,8 +268,8 @@ function randomUserChar() {
 
 // random one of the given characters
 function randomChar(chars) {
-    var char = chars[rollDice(chars.length)];
-    return char;
+    if (!chars || chars.length === 0) return '';
+    return chars[rollDice(chars.length)];
 }
 
 // random roll between 0 and sides
@@ -208,7 +293,7 @@ function randomUppercase(chars) {
 
 // show slider value with emoji for password length
 function updateSliderText() {
-    const passwordLength = document.getElementById('password').innerText.length;
+    const passwordLength = passwordElement.innerText.length;
     let emoji = '';
     if (passwordLength < 8) {
         emoji = '😖 bad'
@@ -228,29 +313,28 @@ function updateSliderText() {
 
 }
 
-function copyToClipboard() {
-    // get text to be copied
-    var text = document.getElementById('password').innerText;
-    console.log(text);
-
-    // need an input text to work with
-    var tempInput = document.createElement("input");
-    tempInput.value = text;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    tempInput.setSelectionRange(0, 99999); /* For mobile devices */
-
-    document.execCommand("copy");
-    document.body.removeChild(tempInput);
-
-    /* Alert the copied text */
-    alert("Copied to clipboard: " + text);
-
+async function copyToClipboard() {
+    try {
+        const text = passwordElement.innerText;
+        await navigator.clipboard.writeText(text);
+        alert("Copied to clipboard: " + text);
+    } catch (err) {
+        console.error("Failed to copy text: ", err);
+        // Fallback to old method if clipboard API fails
+        const tempInput = document.createElement("input");
+        tempInput.value = text;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        tempInput.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+        alert("Copied to clipboard: " + text);
+    }
 }
 
 function easterEgg() {
     if (!useLowercase && !useUppercase && !useSymbols && !useNumbers) {
-        document.getElementById('password').innerText = "¯\\_(ツ)_/¯";
+        passwordElement.innerText = "¯\\_(ツ)_/¯";
         sliderText.innerHTML = slider.value + ' 😵';
     }
 
