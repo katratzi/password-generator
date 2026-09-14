@@ -221,3 +221,20 @@ input[type="radio"] {
   background: var(--colInteractive);
   cursor: -moz-grab; /* Cursor on hover */
 }
+
+#copyStatus {
+  min-height: 1.5em;
+  font-size: 0.85rem;
+  opacity: 1;
+}
+
+#copyStatus.is-faded {
+  opacity: 0.4;
+  transition: opacity 400ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #copyStatus.is-faded {
+    transition: none;
+  }
+}

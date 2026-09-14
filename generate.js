@@ -12,6 +12,7 @@ const say = ["ch", "cl", "dd", "dr", "dy", "fh", "fr", "fy", "gh", "gy", "ky", "
 
 // we have different types of passwords.  a constant random string. a-snake-case-type. easy to say
 let currentGen = "snake";
+let copyStatusTimer;
 // options for characters
 let useUppercase = true;
 let useLowercase = true;
@@ -84,7 +85,7 @@ function changeOpt(option) {
 
 // get a new random password
 function regenerate() {
-
+    resetCopyStatus();
     let password = "";
     if (currentGen === "constant") {
         password = rengerateConstant();
@@ -274,7 +275,13 @@ function randomChar(chars) {
 
 // random roll between 0 and sides
 function rollDice(sides) {
-    return Math.floor(Math.random() * sides);
+    // Reject the uneven remainder so every outcome is equally likely.
+    const limit = 2 ** 32 - (2 ** 32 % sides);
+    const value = new Uint32Array(1);
+    do {
+        crypto.getRandomValues(value);
+    } while (value[0] >= limit);
+    return value[0] % sides;
 }
 
 // flip ramdonly to uppercase
@@ -313,22 +320,53 @@ function updateSliderText() {
 
 }
 
+function resetCopyStatus() {
+    clearTimeout(copyStatusTimer);
+    const status = document.getElementById("copyStatus");
+    status.classList.remove("is-faded");
+    status.textContent = "";
+}
+
+function showCopySuccess() {
+    const status = document.getElementById("copyStatus");
+    clearTimeout(copyStatusTimer);
+    status.classList.remove("is-faded");
+    status.textContent = "Copied to clipboard!";
+    copyStatusTimer = setTimeout(() => {
+        status.classList.add("is-faded");
+    }, 4000);
+}
+
 async function copyToClipboard() {
+    const text = passwordElement.innerText;
+    const status = document.getElementById("copyStatus");
+    resetCopyStatus();
     try {
-        const text = passwordElement.innerText;
         await navigator.clipboard.writeText(text);
-        alert("Copied to clipboard: " + text);
-    } catch (err) {
-        console.error("Failed to copy text: ", err);
-        // Fallback to old method if clipboard API fails
+        showCopySuccess();
+    } catch {
+        // Support browsers where the clipboard API is unavailable or denied.
         const tempInput = document.createElement("input");
         tempInput.value = text;
-        document.body.appendChild(tempInput);
-        tempInput.select();
-        tempInput.setSelectionRange(0, 99999);
-        document.execCommand("copy");
-        document.body.removeChild(tempInput);
-        alert("Copied to clipboard: " + text);
+        tempInput.style.position = "fixed";
+        tempInput.style.opacity = "0";
+        const previousFocus = document.activeElement;
+        try {
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            tempInput.setSelectionRange(0, text.length);
+            const copied = document.execCommand("copy");
+            if (copied) {
+                showCopySuccess();
+            } else {
+                status.textContent = "Couldn't copy. Please select and copy the password manually.";
+            }
+        } catch {
+            status.textContent = "Couldn't copy. Please select and copy the password manually.";
+        } finally {
+            tempInput.remove();
+            if (previousFocus) previousFocus.focus();
+        }
     }
 }
 
