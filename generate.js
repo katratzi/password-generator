@@ -6,8 +6,13 @@ const letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m"
 const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 const symbols = ["!", "@", "$", "%", "^", "&", "*", "(", ")", "?", "#", ";", "+"];
 const vowels = ["a", "e", "i", "o", "u"];
-const nonVowels = letters.filter((letter) => !vowels.includes(letter));
-const say = ["ch", "cl", "dd", "dr", "dy", "fh", "fr", "fy", "gh", "gy", "ky", "ll", "ly", "nt", "nd", "ng", "ny", "ph", "py", "rh", "rn", "rl", "rk", "sh", "st", "sy", "th", "ty", "ph", "vy", "xp", "yl", "yn", "yr", "zz", "zy"];
+// Sounds have separate roles: a word ending is never used before another syllable.
+const saySounds = {
+    consonants: ["b", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "r", "s", "t", "v", "w", "z"],
+    clusters: ["bl", "br", "ch", "cl", "cr", "dr", "fl", "fr", "gl", "gr", "pl", "pr", "sh", "sk", "sl", "sm", "sn", "sp", "st", "sw", "th", "tr", "tw"],
+    endings: ["b", "d", "f", "k", "l", "m", "n", "p", "r", "s", "t", "z"],
+    endingClusters: ["ch", "ck", "sh", "th", "ld", "lt", "mp", "nd", "ng", "nk", "nt", "rd", "rk", "rt", "st"]
+};
 
 
 // we have different types of passwords.  a constant random string. a-snake-case-type. easy to say
@@ -147,106 +152,51 @@ function rengerateSnake() {
     return random;
 }
 
-// regen a constant string, no dashes
+// Plan the exact length before choosing letters. Each internal syllable ends
+// in a vowel, so joining syllables cannot create a pile-up of consonants.
+function generateSay(length) {
+    if (!Number.isInteger(length) || length < 1 || length > 32) {
+        throw new RangeError("Easy-to-say length must be an integer from 1 to 32");
+    }
+    if (length === 1) return randomChar(vowels);
+
+    // Optional opening vowel and final consonant(s), surrounding CV / CCV
+    // syllables. Any body length >= 2 can be composed from lengths 2 and 3.
+    const plans = [];
+    for (const opening of [0, 1]) {
+        for (const ending of [0, 1, 2]) {
+            const body = length - opening - ending;
+            if (body >= 2) plans.push({ opening, ending, body });
+        }
+    }
+    const plan = randomChar(plans);
+    const pattern = [];
+    let remaining = plan.body;
+    while (remaining > 0) {
+        // Prefer single consonants, and never leave one unfillable character.
+        const choices = [2, 2, 3].filter(size =>
+            remaining >= size && remaining - size !== 1);
+        const size = randomChar(choices);
+        pattern.push(size);
+        remaining -= size;
+    }
+
+    let result = plan.opening ? randomChar(vowels) : "";
+    for (const size of pattern) {
+        result += randomChar(size === 2 ? saySounds.consonants : saySounds.clusters);
+        result += randomChar(vowels);
+    }
+    if (plan.ending) {
+        result += randomChar(plan.ending === 1 ? saySounds.endings : saySounds.endingClusters);
+    }
+    return result;
+}
+
 function rengerateSay() {
-    let random = ""
-    const targetLength = slider.value
-
-    // Common English syllable patterns
-    const syllablePatterns = [
-        // consonant + vowel
-        (c, v) => c + v,
-        // consonant + vowel + consonant
-        (c, v, c2) => c + v + c2,
-        // consonant cluster + vowel
-        (c, v) => c + v,
-        // consonant + vowel + consonant cluster
-        (c, v, c2) => c + v + c2
-    ]
-
-    // Common consonant clusters that are easy to pronounce
-    const consonantClusters = [
-        "bl", "br", "ch", "cl", "cr", "dr", "fl", "fr", "gl", "gr", "pl", "pr",
-        "sc", "sh", "sk", "sl", "sm", "sn", "sp", "st", "sw", "th", "tr", "tw", "wh", "wr"
-    ]
-
-    // Common ending consonant clusters
-    const endingClusters = [
-        "ck", "ct", "ft", "ld", "lf", "lk", "lm", "lp", "lt", "mp", "nd", "ng",
-        "nk", "nt", "pt", "rd", "rk", "rm", "rn", "rp", "rt", "sk", "sp", "st"
-    ]
-
-    // Generate syllables until we reach or exceed target length
-    while (random.length < targetLength) {
-        // Choose a random syllable pattern
-        const pattern = syllablePatterns[rollDice(syllablePatterns.length)]
-
-        // Get random consonant(s)
-        let consonant
-        if (rollDice(3) === 0) { // 1/3 chance of using a consonant cluster
-            consonant = consonantClusters[rollDice(consonantClusters.length)]
-        } else {
-            consonant = nonVowels[rollDice(nonVowels.length)]
-        }
-
-        // Get random vowel
-        const vowel = vowels[rollDice(vowels.length)]
-
-        // Get ending consonant if needed
-        let ending = ""
-        if (pattern.length === 3) { // If pattern needs an ending consonant
-            if (rollDice(3) === 0) { // 1/3 chance of using an ending cluster
-                ending = endingClusters[rollDice(endingClusters.length)]
-            } else {
-                ending = nonVowels[rollDice(nonVowels.length)]
-            }
-        }
-
-        // Apply the pattern
-        const syllable = pattern(consonant, vowel, ending)
-
-        // Check remaining length needed
-        const remainingLength = targetLength - random.length
-
-        // If this syllable would make us too long, try a shorter pattern
-        if (syllable.length > remainingLength) {
-            if (remainingLength === 1) {
-                random += vowels[rollDice(vowels.length)]
-                break
-            } else if (remainingLength === 2) {
-                random += nonVowels[rollDice(nonVowels.length)] + vowels[rollDice(vowels.length)]
-                break
-            } else if (remainingLength === 3) {
-                // Try a CVC pattern
-                random += nonVowels[rollDice(nonVowels.length)] +
-                    vowels[rollDice(vowels.length)] +
-                    nonVowels[rollDice(nonVowels.length)]
-                break
-            }
-            // If we can't fit this syllable, try again with a new pattern
-            continue
-        }
-
-        random += syllable
-    }
-
-    // Final length check and adjustment if needed
-    if (random.length !== targetLength) {
-        if (random.length > targetLength) {
-            random = random.substring(0, targetLength)
-        } else {
-            // If we're short, add vowels until we reach the target length
-            while (random.length < targetLength) {
-                random += vowels[rollDice(vowels.length)]
-            }
-        }
-    }
-
-    // modify final string upper/lower
-    if (!useLowercase && useUppercase) { random = random.toUpperCase() }
-    if (useLowercase && useUppercase) { random = randomUppercase(random) }
-
-    return random
+    let random = generateSay(Number(slider.value));
+    if (!useLowercase && useUppercase) { random = random.toUpperCase(); }
+    if (useLowercase && useUppercase) { random = randomUppercase(random); }
+    return random;
 }
 
 // random char from the options set by the user
