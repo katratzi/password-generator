@@ -78,7 +78,11 @@ h1 {
 
 label {
   margin: 0.25rem 1rem;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  /* Keep the label baseline independent of the selected input's marker. */
+  vertical-align: middle;
+  gap: 0.35rem;
 }
 
 button {
@@ -155,15 +159,92 @@ button:active {
   word-wrap: break-word;
 }
 
-/* radio input */
+/* Familiar squares for multiple choices, circles for a single choice. */
+input[type="checkbox"],
+input[type="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+  display: inline-grid;
+  place-content: center;
+  vertical-align: middle;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin: 0;
+  flex-shrink: 0;
+  border: 1.5px solid var(--colPrimary);
+  background-color: #f7f7f7;
+  cursor: pointer;
+}
+
+input[type="checkbox"] {
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 0.25rem;
+}
 
 input[type="radio"] {
-  /* make text and buttons align nicer */
-  vertical-align: middle;
-  margin-top: -1px;
-  /* bit bigger */
-  width: 1.5rem;
-  height: 1.5rem;
+  border-radius: 50%;
+}
+
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+  border-color: var(--colInteractive);
+  background-color: var(--colInteractive);
+}
+
+input[type="checkbox"]:checked::before {
+  content: "";
+  width: 0.25rem;
+  height: 0.45rem;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: translateY(-1px) rotate(45deg);
+}
+
+input[type="radio"]:checked::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+label {
+  cursor: pointer;
+  transition: opacity 180ms ease;
+}
+
+label:has(input:disabled) {
+  opacity: 0.4;
+  cursor: default;
+}
+
+input:disabled {
+  cursor: default;
+}
+
+label:hover input[type="checkbox"]:enabled,
+label:hover input[type="radio"]:enabled {
+  border-color: var(--colInteractive);
+}
+
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:focus-visible {
+  outline: 2px solid var(--colInteractive);
+  outline-offset: 3px;
+}
+
+@media (forced-colors: active) {
+  input[type="checkbox"],
+  input[type="radio"] {
+    -webkit-appearance: auto;
+    appearance: auto;
+  }
+
+  input[type="checkbox"]::before,
+  input[type="radio"]::before {
+    content: none;
+  }
 }
 
 /* For mobile phones: */
@@ -234,6 +315,7 @@ input[type="radio"] {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  label,
   #copyStatus.is-faded {
     transition: none;
   }
